@@ -190,7 +190,7 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                                 fvmVersion2 = ".fvm: " +tmp_fvmVersion;
                         }
                         else
-                        if (fvmVersion.equals("") && file.getName().equals(cnstDartToolFileName)) {
+                        if (file.getName().equals(cnstDartToolFileName)) {
                             String tmp_fvmVersion = getDartToolVersion(k, file);
                             if (tmp_fvmVersion != null && !tmp_fvmVersion.isEmpty())
                                 fvmVersion1 = ".dart_tool: " +tmp_fvmVersion;
@@ -343,10 +343,20 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                         Pattern.MULTILINE
                 );
                 Matcher matcher = versionPattern.matcher(fileContent);
+                if (!matcher.find()) {
+                    versionPattern = Pattern.compile(
+                            "environment:\n\\s*sdk:\\s*\\^(.*?)\n",
+                            Pattern.MULTILINE
+                    );
+                    matcher = versionPattern.matcher(fileContent);
+                }
+                else
+                    matcher = versionPattern.matcher(fileContent);
                 if (matcher.find()) {
                     String strVersionFlutter = matcher.group(1);
                     return " project name: " +name +" yaml environment sdk: " +strVersionFlutter ;
                 }
+
                 return ret;
             }
 
