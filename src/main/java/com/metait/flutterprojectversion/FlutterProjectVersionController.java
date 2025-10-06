@@ -1,9 +1,7 @@
 package com.metait.flutterprojectversion;
 
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -18,11 +16,8 @@ import javafx.collections.ObservableList;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.security.Provider;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class FlutterProjectVersionController {
     @FXML
@@ -39,6 +34,12 @@ public class FlutterProjectVersionController {
     private ProgressBar progressBar;
     @FXML
     private Label labelExec;
+    @FXML
+    private RadioButton radiobutton1LeveSubDirs;
+    @FXML
+    private RadioButton radiobuttonOnlyCurrentDir;
+    @FXML
+    private RadioButton radiobuttonAllSubDirs;
 
     private final DirectoryChooser flutterBaseDir = new DirectoryChooser();
     private File dirBase = null;
@@ -72,6 +73,23 @@ public class FlutterProjectVersionController {
         listViewFlutterProj.itemsProperty().bind(flutterVersionService.valueProperty());
         labelExec.textProperty().bind(flutterVersionService.messageProperty());
 
+        // listViewFlutterProj.set
+        listViewFlutterProj.setCellFactory(param -> new ListCell<FlutterProjVersionData>() {
+            @Override
+            protected void updateItem(FlutterProjVersionData item, boolean empty) {
+                super.updateItem(item, empty);
+
+               if (empty || item == null) {
+                    setText(null);
+                    setStyle(null);
+                } else {
+                    setText(item.toString());
+                    setStyle(!item.getStrFlutterVersion().isEmpty() && !item.getFvmVersion().isEmpty()
+                            ? "-list-cell" : "-fx-background-color: red;");
+                }
+            }
+        });
+
         listViewFlutterProj.setOnMouseClicked(me -> {
             if (me.getButton() == MouseButton.PRIMARY && me.getClickCount() == 2) {
                 int newPosition = listViewFlutterProj.getSelectionModel().getSelectedIndex();
@@ -85,9 +103,14 @@ public class FlutterProjectVersionController {
                 System.out.println("Clicked: " + item);
                     // if (desktop != null)
                     //   desktop.open(new File(item));
-                String strCmnFile = (item.getProjVersionFile().getAbsolutePath().contains(" ") ?
+                String strCmnFile2 = (item.getProjVersionFile().getAbsolutePath().contains(" ") ?
                         "'" +item.getProjVersionFile().getParentFile().getAbsolutePath() +"'" :
                         item.getProjVersionFile().getParentFile().getAbsolutePath());
+                if (item.getFvmVersion().isEmpty() && item.getStrFlutterVersion().isEmpty())
+                    strCmnFile2 = (item.getProjVersionFile().getAbsolutePath().contains(" ") ?
+                            "'" +item.getProjVersionFile().getAbsolutePath() +"'" :
+                            item.getProjVersionFile().getAbsolutePath());
+                final String strCmnFile = strCmnFile2;
 
                 setLabelMsg("An open terminal has been in dir:: " + strCmnFile);
                     Thread taskThread = new Thread(new Runnable() {
@@ -156,7 +179,8 @@ public class FlutterProjectVersionController {
                     content.putString(item.toString());
                     // content.putHtml("<b>Bold</b> text");
                     Clipboard.getSystemClipboard().setContent(content);
-                    setLabelMsg("Into clipboard: " +item.toString());
+                 //   listViewFlutterProj.refresh();
+               //    setLabelMsg("Into clipboard: " +item.toString());
                     // if (desktop != null)
                     //   desktop.open(new File(item));
                 } catch (Exception e) {
@@ -234,6 +258,16 @@ public class FlutterProjectVersionController {
         double zero = 0.0;
         dataList.clear();
         flutterVersionService.setBaseDir(dirBase);
+        // radiobutton1LeveSubDirs is selected: normal executing
+        if (radiobutton1LeveSubDirs.isSelected())
+            flutterVersionService.setExecutetype(FlutterVersionService.EXECUTETYPE.ONELEVELSUBDIR);
+        else
+        if (radiobuttonOnlyCurrentDir.isSelected())
+            flutterVersionService.setExecutetype(FlutterVersionService.EXECUTETYPE.ONLYCURRENTSELECTEDDIR);
+        else
+        if (radiobuttonAllSubDirs.isSelected())
+            flutterVersionService.setExecutetype(FlutterVersionService.EXECUTETYPE.ALLSUBDIRS);
+
         Worker.State serviceState = flutterVersionService.getState();
         if (serviceState == Worker.State.READY) {
             labelExec.textProperty().bind(flutterVersionService.messageProperty());
