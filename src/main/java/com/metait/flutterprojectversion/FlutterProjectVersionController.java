@@ -45,6 +45,7 @@ public class FlutterProjectVersionController {
     private Stage primaryStage;
     private ObservableList<FlutterProjVersionData> dataList = FXCollections.observableArrayList();
     private FlutterVersionService flutterVersionService = new FlutterVersionService();
+    private String strTerminalFontSize;
 
     protected void appIsClosing()
     {
@@ -63,6 +64,7 @@ public class FlutterProjectVersionController {
 
     @FXML
     public void initialize() {
+
         flutterBaseDir.setTitle("Open flutter base directory to read");
        // listViewFlutterProj.setItems(dataList);
         progressBar.progressProperty().bind(flutterVersionService.progressProperty());
@@ -97,7 +99,7 @@ public class FlutterProjectVersionController {
                             // -- Linux --
                             // Run a shell command
                                 if (File.separatorChar == '/')
-                                    processBuilder.command("xterm", "-hold", "-fa", "'Monospace'", "-fs", "14", "-e", "cd " + strCmnFile +";/bin/bash");
+                                    processBuilder.command("xterm", "-hold", "-fa", "'Monospace'", "-fs", strTerminalFontSize, "-e", "cd " + strCmnFile +";/bin/bash");
                                 else
                                     processBuilder.command("cmd", "/C", "cd " + strCmnFile +";cmd");
 
@@ -186,6 +188,11 @@ public class FlutterProjectVersionController {
             ret = true;
         }
         return ret;
+    }
+
+    public void setTerminalFontSize(String p_fontSize)
+    {
+        strTerminalFontSize = p_fontSize;
     }
 
     public void setPrimaryStage(Stage stage)
