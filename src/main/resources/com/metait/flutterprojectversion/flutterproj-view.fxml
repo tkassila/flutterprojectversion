@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 
 <VBox prefHeight="701.0" prefWidth="955.0" spacing="5.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
     <padding>
@@ -38,6 +39,7 @@
          <Label fx:id="labelExec" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="517.0" HBox.hgrow="ALWAYS" />
       </children>
    </HBox>
+   <Line disable="true" endX="814.2929077148438" startX="-100.0" />
    <HBox prefHeight="25.0" prefWidth="915.0" spacing="5.0">
       <children>
          <Label prefHeight="25.0" prefWidth="129.0" style="-fx-font-weight: bold;" text="ListView legends:" />
@@ -46,11 +48,16 @@
          <Label prefHeight="25.0" prefWidth="171.0" style="-fx-background-color: red;" text="No Flutter project directory" />
       </children>
    </HBox>
+   <Line disable="true" endX="814.2929077148438" startX="-100.0">
+      <VBox.margin>
+         <Insets bottom="10.0" />
+      </VBox.margin>
+   </Line>
    <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
       <children>
          <ListView fx:id="listViewFlutterProj" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" style="-fx-font-weight: bold; -fx-font-size: 15;" VBox.vgrow="ALWAYS" />
       </children>
    </VBox>
 
-    <Label fx:id="labelMsg" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="924.0" text="Kissa" VBox.vgrow="ALWAYS" />
+    <Label fx:id="labelMsg" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="924.0" VBox.vgrow="ALWAYS" />
 </VBox>

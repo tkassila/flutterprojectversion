@@ -84,7 +84,8 @@ public class FlutterProjectVersionController {
                     setStyle(null);
                 } else {
                     setText(item.toString());
-                    boolean bRedStyle = item.getStrFlutterVersion().isEmpty() && item.getFvmVersion().isEmpty();
+                    boolean bRedStyle = (item.getStrFlutterVersion().isBlank() || item.getStrFlutterVersion().isEmpty())
+                     && (item.getFvmVersion().isEmpty() || item.getFvmVersion().isBlank());
                     String newStyle2 = bRedStyle ? "-fx-background-color: red;" : "-list-cell;";
                     if (!bRedStyle)
                         newStyle2 = item.getYamlVersion().isEmpty() ? "-fx-background-color: orange;" : newStyle2;

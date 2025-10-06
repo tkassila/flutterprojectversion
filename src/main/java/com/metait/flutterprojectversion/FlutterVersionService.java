@@ -178,7 +178,7 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                     final String cnstFvmFileName = ".fvm";
                     final String cnstDartToolFileName = ".dart_tool";
                     int max = files.length;
-                    String fvmVersion = "";
+                    String fvmVersion = "", fvmVersion1 = "", fvmVersion2 = "";
                     for (int i = 0; i < max; i++)
                     {
                         file = files[i];
@@ -187,15 +187,17 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                         if (file.getName().equals(cnstFvmFileName)) {
                             String tmp_fvmVersion = getFVMVersion(k, file);
                             if (tmp_fvmVersion != null && !tmp_fvmVersion.isEmpty())
-                                fvmVersion = ".fvm: " +tmp_fvmVersion;
+                                fvmVersion2 = ".fvm: " +tmp_fvmVersion;
                         }
                         else
                         if (fvmVersion.equals("") && file.getName().equals(cnstDartToolFileName)) {
                             String tmp_fvmVersion = getDartToolVersion(k, file);
                             if (tmp_fvmVersion != null && !tmp_fvmVersion.isEmpty())
-                                fvmVersion = ".dart_tool: " +tmp_fvmVersion;
+                                fvmVersion1 = ".dart_tool: " +tmp_fvmVersion;
                         }
                     }
+
+                    fvmVersion = fvmVersion1 +" " +fvmVersion2;
 
                     for (int ki = 0; ki < max; ki++)
                     {
