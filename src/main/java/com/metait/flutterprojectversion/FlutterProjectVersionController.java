@@ -84,8 +84,12 @@ public class FlutterProjectVersionController {
                     setStyle(null);
                 } else {
                     setText(item.toString());
-                    setStyle(!item.getStrFlutterVersion().isEmpty() && !item.getFvmVersion().isEmpty()
-                            ? "-list-cell" : "-fx-background-color: red;");
+                    boolean bRedStyle = item.getStrFlutterVersion().isEmpty() && item.getFvmVersion().isEmpty();
+                    String newStyle2 = bRedStyle ? "-fx-background-color: red;" : "-list-cell;";
+                    if (!bRedStyle)
+                        newStyle2 = item.getYamlVersion().isEmpty() ? "-fx-background-color: orange;" : newStyle2;
+                    final String strStyle = newStyle2;
+                    setStyle(strStyle);
                 }
             }
         });

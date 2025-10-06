@@ -37,7 +37,7 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                 updateMessage("Reading flutter directories");
                 sbNoFlutterProjDatas = new StringBuffer();
                 ObservableList<FlutterProjVersionData> result = FXCollections.observableArrayList();
-                ObservableList<FlutterProjVersionData> resultSubDirs;
+                List<FlutterProjVersionData> resultSubDirs;
 
                 if (baseDir != null && baseDir.exists() && baseDir.isDirectory())
                 {
@@ -96,6 +96,7 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                             if (resultSubDirs != null && !resultSubDirs.isEmpty())
                                 result.addAll(resultSubDirs);
                         }
+
                         if (data == null) {
                             sbNoFlutterProjDatas.append(current.getAbsolutePath()+"\n");
                             continue;
@@ -119,19 +120,19 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                 return result;
             }
 
-            protected ObservableList<FlutterProjVersionData> getResultListForFlutterProjVersionOf(int k, File currentDir)
+            protected List<FlutterProjVersionData> getResultListForFlutterProjVersionOf(int k, File currentDir)
             {
-                ObservableList<FlutterProjVersionData> result = null;
+                List<FlutterProjVersionData> result = null;
                 File [] files = currentDir.listFiles();
                 File current;
-                ObservableList<FlutterProjVersionData> resultSubDirs;
+                List<FlutterProjVersionData> resultSubDirs;
 
                 if (files == null || files.length == 0)
                 {
                     return result;
                 }
 
-                result = FXCollections.observableArrayList();
+                result = new ArrayList<FlutterProjVersionData>();
 
                 int max2 = files.length;
                 FlutterProjVersionData data;
@@ -148,10 +149,12 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                         if (resultSubDirs != null && !resultSubDirs.isEmpty())
                             result.addAll(resultSubDirs);
                     }
+
                     if (data == null) {
                         sbNoFlutterProjDatas.append(current.getAbsolutePath() + "\n");
                         continue;
                     }
+
                     if (!data.getStrFlutterVersion().isEmpty() && !data.getFvmVersion().isEmpty())
                         result.add(data);
                 }
@@ -161,6 +164,7 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
             protected FlutterProjVersionData getFlutterProjVersionNewDataOf(int k, File flutterProjDir)
             {
                 FlutterProjVersionData ret = null;
+                FlutterProjVersionData yamData = null;
                 if (flutterProjDir == null || flutterProjDir.isFile())
                     return ret;
                 try {
@@ -198,26 +202,44 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                         file = files[ki];
                         if (file == null || file.isDirectory())
                             continue;
+                        if (file.getName().equals(cnstFlutterProjVersionFileNameYAML)) {
+                            yamData = getFlutterVersionDataYAML(k, file, fvmVersion, "");
+                            break;
+                        }
+                    }
+
+                    for (int ki = 0; ki < max; ki++)
+                    {
+                        file = files[ki];
+                        if (file == null || file.isDirectory())
+                            continue;
                         if (file.getName().equals(cnstFlutterProjVersionFileName))
-                            return getFlutterVersionData(k, file, fvmVersion);
+                            return getFlutterVersionData(k, file, fvmVersion,
+                                    yamData != null ? yamData.getYamlVersion() : "");
                     }
 
                     if (fvmVersion != null && !fvmVersion.isEmpty())
                     {
+                        if (yamData != null)
+                            return yamData;
+
                         for (int ki = 0; ki < max; ki++)
                         {
                             file = files[ki];
                             if (file == null || file.isDirectory())
                                 continue;
                             if (file.getName().equals(cnstFlutterProjVersionFileNameYAML))
-                                return getFlutterVersionDataYAML(k, file, fvmVersion);
+                                return getFlutterVersionDataYAML(k, file, fvmVersion,
+                                        yamData != null ? yamData.getYamlVersion() : "");
                         }
 
-                        return new FlutterProjVersionData("", flutterProjDir, fvmVersion);
+                        return new FlutterProjVersionData("", flutterProjDir, fvmVersion,
+                                yamData != null ? yamData.getYamlVersion() : "");
                         // getFlutterVersionData(k, flutterProjDir, fvmVersion);
                     }
                     else
-                        return new FlutterProjVersionData("", flutterProjDir, "");
+                        return new FlutterProjVersionData("", flutterProjDir, "",
+                                yamData != null ? yamData.getYamlVersion() : "");
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -270,13 +292,14 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                 return "";
             }
 
-            protected FlutterProjVersionData getFlutterVersionDataYAML(int k, File fileFlutter, String fvmVersion)
+            protected FlutterProjVersionData getFlutterVersionDataYAML(int k, File fileFlutter,
+                                                                       String fvmVersion, String yamVersion)
             {
                 FlutterProjVersionData ret = null;
                 try {
                     String fileContent = Files.readString(Path.of(fileFlutter.getAbsolutePath()));
-                    String strVersion = getFlutterVersionStringYAML(fileContent);
-                    ret = new FlutterProjVersionData(strVersion, fileFlutter, fvmVersion);
+                    String strYamlVersion = getFlutterVersionStringYAML(fileContent);
+                    ret = new FlutterProjVersionData("", fileFlutter, fvmVersion, strYamlVersion);
                 } catch (IOException e) {
                     // handle exception in i/o
                     return null;
@@ -284,13 +307,14 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                 return ret;
             }
 
-            protected FlutterProjVersionData getFlutterVersionData(int k, File fileFlutter, String fvmVersion)
+            protected FlutterProjVersionData getFlutterVersionData(int k, File fileFlutter,
+                                                                   String fvmVersion, String yamlVersion)
             {
                 FlutterProjVersionData ret = null;
                 try {
                     String fileContent = Files.readString(Path.of(fileFlutter.getAbsolutePath()));
                     String strVersion = getFlutterVersionString(fileContent);
-                    ret = new FlutterProjVersionData(strVersion, fileFlutter, fvmVersion);
+                    ret = new FlutterProjVersionData(strVersion, fileFlutter, fvmVersion, yamlVersion);
                 } catch (IOException e) {
                     // handle exception in i/o
                     return null;
@@ -301,15 +325,25 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
             protected String getFlutterVersionStringYAML
                     (String fileContent)
             {
-                String ret = null;
+                String ret = "";
+                String name = "";
+                Pattern namePattern = Pattern.compile(
+                        "name:\\s*(.*?)\n",
+                        Pattern.MULTILINE
+                );
+
+                Matcher matcherName = namePattern.matcher(fileContent);
+                if (matcherName.find())
+                    name = matcherName.group(1);
+
                 Pattern versionPattern = Pattern.compile(
-                        "environment:\n\\s*sdk:\\s*^(.*?)\n",
+                        "environment:\n\\s*sdk:\\s*'(.*?)'\n",
                         Pattern.MULTILINE
                 );
                 Matcher matcher = versionPattern.matcher(fileContent);
                 if (matcher.find()) {
                     String strVersionFlutter = matcher.group(1);
-                    return "yaml environment sdk: " +strVersionFlutter ;
+                    return " project name: " +name +" yaml environment sdk: " +strVersionFlutter ;
                 }
                 return ret;
             }
