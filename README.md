@@ -1,4 +1,4 @@
-# javafxSeekPdfFiles
+# Flutter project version directories in gui app
 JavaFx application for search and reading flutter project version files under selected base directory. 
 It working with java 11. After selected dir and pressing start button this gui app is showing all sub dirs
 of flutter projects and founded flutter project versions. By 1 mouse click selected is copyed into clibborad.
