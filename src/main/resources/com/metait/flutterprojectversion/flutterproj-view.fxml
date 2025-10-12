@@ -6,58 +6,171 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
 
-<VBox prefHeight="701.0" prefWidth="955.0" spacing="5.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-   <HBox prefHeight="32.0" prefWidth="915.0" spacing="5.0">
-      <children>
-          <Button fx:id="buttonBaseDir" maxWidth="-Infinity" onAction="#buttonBaseDirPressed" prefHeight="27.0" prefWidth="155.0" text="Open base flutter dir" />
-         <Label fx:id="labelPath" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="749.0" HBox.hgrow="ALWAYS" />
-      </children>
-   </HBox>
-   <HBox prefHeight="38.0" prefWidth="915.0" spacing="5.0">
-      <children>
-         <RadioButton fx:id="radiobutton1LeveSubDirs" mnemonicParsing="false" prefHeight="28.0" prefWidth="195.0" selected="true" text="Read 1 level subdirectories">
-            <toggleGroup>
-               <ToggleGroup fx:id="SUBDIRS" />
-            </toggleGroup>
-         </RadioButton>
-         <RadioButton fx:id="radiobuttonOnlyCurrentDir" mnemonicParsing="false" prefHeight="28.0" prefWidth="212.0" text="Read Only selected directory" toggleGroup="$SUBDIRS" />
-         <RadioButton fx:id="radiobuttonAllSubDirs" mnemonicParsing="false" prefHeight="28.0" prefWidth="175.0" text="Read all sub directories" toggleGroup="$SUBDIRS" />
-      </children>
-   </HBox>
-   <HBox prefHeight="33.0" prefWidth="915.0" spacing="5.0">
-      <children>
-         <Button fx:id="buttonStartReadDirs" maxWidth="-Infinity" onAction="#buttonStartReadDirsPressed" prefHeight="27.0" prefWidth="195.0" text="Start to read directories" />
-         <ProgressBar fx:id="progressBar" prefHeight="28.0" prefWidth="200.0" progress="0.0" />
-         <Label fx:id="labelExec" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="517.0" HBox.hgrow="ALWAYS" />
-      </children>
-   </HBox>
-   <Line disable="true" endX="814.2929077148438" startX="-100.0" />
-   <HBox prefHeight="25.0" prefWidth="915.0" spacing="5.0">
-      <children>
-         <Label prefHeight="25.0" prefWidth="129.0" style="-fx-font-weight: bold;" text="ListView legends:" />
-         <Label prefHeight="29.0" prefWidth="252.0" text="Flutter project with .yaml and .lock files" />
-         <Label prefHeight="30.0" prefWidth="252.0" style="-fx-background-color: orange;" text="Flutter project with only .lock files" />
-         <Label prefHeight="25.0" prefWidth="171.0" style="-fx-background-color: red;" text="No Flutter project directory" />
-      </children>
-   </HBox>
-   <Line disable="true" endX="814.2929077148438" startX="-100.0">
-      <VBox.margin>
-         <Insets bottom="10.0" />
-      </VBox.margin>
-   </Line>
-   <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
-      <children>
-         <ListView fx:id="listViewFlutterProj" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" style="-fx-font-weight: bold; -fx-font-size: 15;" VBox.vgrow="ALWAYS" />
-      </children>
-   </VBox>
-
-    <Label fx:id="labelMsg" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="924.0" VBox.vgrow="ALWAYS" />
-</VBox>
+<TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <tabs>
+      <Tab text="Read flutter projects">
+         <content>
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="881.0" prefWidth="1057.0" spacing="5.0">
+                <padding>
+                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                </padding>
+               <HBox prefHeight="32.0" prefWidth="915.0" spacing="10.0">
+                  <children>
+                      <Button fx:id="buttonBaseDir" maxWidth="-Infinity" onAction="#buttonBaseDirPressed" prefHeight="27.0" prefWidth="155.0" text="Open base flutter dir" />
+                     <Label fx:id="labelPath" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="749.0" HBox.hgrow="ALWAYS" />
+                  </children>
+               </HBox>
+               <HBox prefHeight="38.0" prefWidth="915.0" spacing="5.0">
+                  <children>
+                     <RadioButton fx:id="radiobutton1LeveSubDirs" mnemonicParsing="false" prefHeight="28.0" prefWidth="195.0" selected="true" text="Read 1 level subdirectories">
+                        <toggleGroup>
+                           <ToggleGroup fx:id="SUBDIRS" />
+                        </toggleGroup>
+                     </RadioButton>
+                     <RadioButton fx:id="radiobuttonOnlyCurrentDir" mnemonicParsing="false" prefHeight="28.0" prefWidth="212.0" text="Read Only selected directory" toggleGroup="$SUBDIRS" />
+                     <RadioButton fx:id="radiobuttonAllSubDirs" mnemonicParsing="false" prefHeight="28.0" prefWidth="175.0" text="Read all sub directories" toggleGroup="$SUBDIRS" />
+                     <RadioButton fx:id="radiobuttonAllBaseDirs" mnemonicParsing="false" prefHeight="28.0" prefWidth="242.0" text="Read from many base directories" toggleGroup="$SUBDIRS" />
+                  </children>
+               </HBox>
+               <HBox maxWidth="1.7976931348623157E308" prefHeight="33.0" prefWidth="915.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                  <children>
+                     <Button fx:id="buttonStartReadDirs" maxWidth="-Infinity" onAction="#buttonStartReadDirsPressed" prefHeight="27.0" prefWidth="195.0" text="Start to read directories" />
+                     <ProgressBar fx:id="progressBar" prefHeight="28.0" prefWidth="200.0" progress="0.0" />
+                     <Label fx:id="labelExec" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="517.0" HBox.hgrow="ALWAYS" />
+                  </children>
+               </HBox>
+               <Separator prefHeight="8.0" prefWidth="916.0" />
+               <HBox prefHeight="23.0" prefWidth="916.0" spacing="5.0">
+                  <children>
+                     <Label prefHeight="26.0" prefWidth="141.0" text="Meld shell exec name:" />
+                     <TextField fx:id="textFieldMeld" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="703.0" HBox.hgrow="ALWAYS" />
+                  </children>
+               </HBox>
+               <HBox prefHeight="29.0" prefWidth="915.0" spacing="10.0">
+                  <children>
+                     <Button fx:id="buttonMeldCompare" mnemonicParsing="false" onAction="#buttonMeldComparePressed" text="Open Meld with 2 or 3 selected row directories for comparing" />
+                     <Label maxWidth="1.7976931348623157E308" prefHeight="31.0" prefWidth="512.0" text="= Ctrl or Shift keys with mouse clicks. || Meld cmd line exec name can diff." HBox.hgrow="ALWAYS" />
+                  </children>
+               </HBox>
+               <HBox prefHeight="25.0" prefWidth="915.0" spacing="5.0">
+                  <children>
+                     <Label prefHeight="25.0" prefWidth="129.0" style="-fx-font-weight: bold;" text="ListView legends:" />
+                     <Label prefHeight="29.0" prefWidth="252.0" text="Flutter project with .yaml and .lock files" />
+                     <Label prefHeight="30.0" prefWidth="252.0" style="-fx-background-color: orange;" text="Flutter project with only .lock files" />
+                     <Label prefHeight="25.0" prefWidth="171.0" style="-fx-background-color: red;" text="No Flutter project directory" />
+                  </children>
+               </HBox>
+               <Separator prefWidth="200.0" />
+               <VBox prefHeight="599.0" prefWidth="1017.0" VBox.vgrow="ALWAYS">
+                  <children>
+                     <HBox maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="1017.0" VBox.vgrow="ALWAYS">
+                        <children>
+                           <Label prefHeight="25.0" prefWidth="77.0" text="Filter table:" />
+                           <TextField fx:id="textFieldFilter" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="941.0" HBox.hgrow="ALWAYS" />
+                        </children>
+                     </HBox>
+                     <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="556.0" prefWidth="1017.0" VBox.vgrow="ALWAYS">
+                        <content>
+                           <TableView fx:id="tableViewData" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="363.0" prefWidth="913.0" style="-fx-font-weight: bold; -fx-font-size: 15;">
+                             <columns>
+                               <TableColumn fx:id="projNameColumn" prefWidth="225.0" text="Project name" />
+                                 <TableColumn fx:id="dirColumn" minWidth="0.0" prefWidth="327.0" text="Project directory" />
+                                 <TableColumn fx:id="restColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="461.0" text="Founded data" />
+                             </columns>
+                           </TableView>
+                        </content>
+                     </ScrollPane>
+                  </children>
+               </VBox>
+            
+                <Label fx:id="labelMsg" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="924.0" VBox.vgrow="ALWAYS" />
+            </VBox>
+         </content>
+      </Tab>
+      <Tab text="Open meld into dirs">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="881.0" prefWidth="1057.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <HBox prefHeight="32.0" prefWidth="915.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="buttonBaseDir2" maxWidth="-Infinity" onAction="#buttonBaseDirPressed2" prefHeight="27.0" prefWidth="155.0" text="Open base dir" />
+                              <Label fx:id="labelPath2" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="749.0" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="38.0" prefWidth="915.0" spacing="5.0">
+                           <children>
+                              <RadioButton fx:id="radiobutton1LeveSubDirs2" mnemonicParsing="false" prefHeight="28.0" prefWidth="195.0" selected="true" text="Read 1 level subdirectories">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="SUBDIRS1" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="radiobuttonAllSubDirs2" mnemonicParsing="false" prefHeight="28.0" prefWidth="175.0" text="Read all sub directories" toggleGroup="$SUBDIRS1" />
+                              <RadioButton fx:id="radiobuttonAllBaseDirs2" mnemonicParsing="false" prefHeight="28.0" prefWidth="242.0" text="Read from many base directories">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="SUBDIRS2" />
+                                 </toggleGroup>
+                              </RadioButton>
+                           </children>
+                        </HBox>
+                        <HBox maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="1017.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="buttonStartReadDirs2" maxWidth="-Infinity" onAction="#buttonStartReadDirsPressed2" prefHeight="27.0" prefWidth="195.0" text="Start to read directories" />
+                              <ProgressBar fx:id="progressBar2" prefHeight="28.0" prefWidth="200.0" progress="0.0" />
+                              <Label fx:id="labelExec2" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="517.0" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <VBox prefHeight="750.0" prefWidth="1017.0">
+                           <children>
+                              <Separator prefHeight="8.0" prefWidth="916.0" />
+                              <HBox prefHeight="23.0" prefWidth="916.0" spacing="5.0">
+                                 <children>
+                                    <Label prefHeight="26.0" prefWidth="141.0" text="Meld shell exec name:" />
+                                    <TextField fx:id="textFieldMeld2" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="703.0" HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                              <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <HBox prefHeight="29.0" prefWidth="915.0" spacing="10.0">
+                                       <children>
+                                          <Button fx:id="buttonMeldCompare2" mnemonicParsing="false" onAction="#buttonMeldComparePressed2" text="Open Meld with 2 or 3 selected row directories for comparing" />
+                                          <Label maxWidth="1.7976931348623157E308" prefHeight="31.0" prefWidth="512.0" text="= Ctrl or Shift keys with mouse clicks. || Meld cmd line exec name can diff." HBox.hgrow="ALWAYS" />
+                                       </children>
+                                    </HBox>
+                                    <Separator prefWidth="200.0" />
+                                    <HBox maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="1017.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <Label prefHeight="25.0" prefWidth="77.0" text="Filter list:" />
+                                          <TextField fx:id="textFieldFilter2" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="941.0" HBox.hgrow="ALWAYS" />
+                                       </children>
+                                    </HBox>
+                                    <ListView fx:id="listViewDirs" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="616.0" prefWidth="1017.0" style="-fx-font-weight: bold; -fx-font-size: 15;" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                        <Label fx:id="labelMsg2" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="924.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+        </content>
+      </Tab>
+   </tabs>
+</TabPane>

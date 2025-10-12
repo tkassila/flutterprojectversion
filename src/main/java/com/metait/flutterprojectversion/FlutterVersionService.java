@@ -19,7 +19,10 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
     public enum EXECUTETYPE {
         ONELEVELSUBDIR, ONLYCURRENTSELECTEDDIR, ALLSUBDIRS
     }
-
+    private IServiceDone callbackInstance;
+    public void setCallbackInstance(IServiceDone p_callbackInstance){
+        callbackInstance = p_callbackInstance;
+    }
     private EXECUTETYPE executetype = EXECUTETYPE.ONELEVELSUBDIR;
 
     public void setExecutetype(EXECUTETYPE p_executeType){ executetype = p_executeType; }
@@ -117,6 +120,8 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                 else
                     updateMessage("Flutter base directory not selected");
 
+                if (callbackInstance != null)
+                    callbackInstance.onServiceSuccess("Done. All directories are read.", result);
                 return result;
             }
 
@@ -217,7 +222,8 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                             continue;
                         if (file.getName().equals(cnstFlutterProjVersionFileName))
                             return getFlutterVersionData(k, file, fvmVersion,
-                                    yamData != null ? yamData.getYamlVersion() : "");
+                                    yamData != null ? yamData.getYamlVersion() : "",
+                                    yamData != null ? yamData.getProjName() : "");
                     }
 
                     if (fvmVersion != null && !fvmVersion.isEmpty())
@@ -236,12 +242,14 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                         }
 
                         return new FlutterProjVersionData("", flutterProjDir, fvmVersion,
-                                yamData != null ? yamData.getYamlVersion() : "");
+                                yamData != null ? yamData.getYamlVersion() : "",
+                                yamData != null ? yamData.getProjName() : "");
                         // getFlutterVersionData(k, flutterProjDir, fvmVersion);
                     }
                     else
                         return new FlutterProjVersionData("", flutterProjDir, "",
-                                yamData != null ? yamData.getYamlVersion() : "");
+                                yamData != null ? yamData.getYamlVersion() : "",
+                                yamData != null ? yamData.getProjName() : "");
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -301,7 +309,18 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
                 try {
                     String fileContent = Files.readString(Path.of(fileFlutter.getAbsolutePath()));
                     String strYamlVersion = getFlutterVersionStringYAML(fileContent);
-                    ret = new FlutterProjVersionData("", fileFlutter, fvmVersion, strYamlVersion);
+                    if (strYamlVersion == null || strYamlVersion.isEmpty())
+                        return null;
+                    String projName = "";
+                    Pattern namePattern = Pattern.compile(
+                            "project\\sname:\\s+(.*?)\\s",
+                            Pattern.MULTILINE
+                    );
+                    Matcher matcherName = namePattern.matcher(strYamlVersion);
+                    if (matcherName.find())
+                        projName = matcherName.group(1);
+                    ret = new FlutterProjVersionData("", fileFlutter, fvmVersion,
+                            strYamlVersion, projName);
                 } catch (IOException e) {
                     // handle exception in i/o
                     return null;
@@ -310,13 +329,15 @@ public class FlutterVersionService extends Service<ObservableList<FlutterProjVer
             }
 
             protected FlutterProjVersionData getFlutterVersionData(int k, File fileFlutter,
-                                                                   String fvmVersion, String yamlVersion)
+                                                                   String fvmVersion, String yamlVersion,
+                                                                   String projName)
             {
                 FlutterProjVersionData ret = null;
                 try {
                     String fileContent = Files.readString(Path.of(fileFlutter.getAbsolutePath()));
                     String strVersion = getFlutterVersionString(fileContent);
-                    ret = new FlutterProjVersionData(strVersion, fileFlutter, fvmVersion, yamlVersion);
+                    ret = new FlutterProjVersionData(strVersion, fileFlutter, fvmVersion,
+                                yamlVersion, projName);
                 } catch (IOException e) {
                     // handle exception in i/o
                     return null;
