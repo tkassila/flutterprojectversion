@@ -7,4 +7,9 @@ requires that xterm is installed on a linux (apt install xterm).
 
 Added 3 execute type for which directory or sub directories are read. Or should all sub (deep)) directories are read.
 
+The second tab 
+
+I added a second tab into app: to read directories after base directory with different rabiobutton optoins and 
+to compare directories with meld.
+
 Default for terminal font size is 14, but it can changed by given app parameter: -fs <number> . That is: -f 10

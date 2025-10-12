@@ -82,6 +82,14 @@ public class FlutterProjectVersionController implements IServiceDone {
     private Button buttonStartReadDirs2;
     @FXML
     private TextField textFieldMeld2;
+    @FXML
+    private ChoiceBox<DirSet> choiceBoxDirSet;
+    @FXML
+    private ChoiceBox<DirSet> choiceBoxDirSet2;
+    @FXML
+    private Button buttonOpenDirSetDialog;
+    @FXML
+    private Button buttonOpenDirSetDialog2;
 
     private final DirectoryChooser flutterBaseDir = new DirectoryChooser();
     private final DirectoryChooser flutterBaseDir2 = new DirectoryChooser();
